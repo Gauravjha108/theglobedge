@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Medical Universities - Countries</title>
+<style>
+  /* Animated Gradient Background */
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0; 
+    padding: 20px;
+    background: linear-gradient(270deg, #89f7fe, #66a6ff, #fbc7a4, #f7a8a8);
+    background-size: 800% 800%;
+    animation: gradientBG 20s ease infinite;
+  }
+
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .main-header {
+    text-align: center;
+    font-size: 48px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    animation: fadeIn 2s ease-in-out;
+    margin-bottom: 10px;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .description-section {
+    max-width: 900px;
+    margin: 0 auto 30px auto;
+    padding: 20px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    font-size: 15px;
+    line-height: 1.6;
+    color: #333;
+  }
+
+  h1 {
+    text-align: center;
+    color: #222;
+  }
+
+  .country-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
+    gap: 20px;
+    max-width: 900px;
+    margin: 30px auto;
+  }
+
+  .country-card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+    color: black;
+  }
+
+  .country-card:hover {
+    transform: scale(1.07) translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  }
+
+  .flag {
+    font-size: 50px;
+    margin-bottom: 10px;
+  }
+
+  footer {
+    text-align: center;
+    padding: 30px 15px;
+    margin-top: 40px;
+    font-size: 14px;
+    color: #333;
+    background-color: rgba(255,255,255,0.8);
+    border-top: 1px solid #ccc;
+  }
+
+  .contact-form {
+    max-width: 600px;
+    margin: 20px auto;
+    text-align: left;
+  }
+
+  .contact-form input, .contact-form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+    border: 1px solid #aaa;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+
+  .contact-form button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .contact-form button:hover {
+    background-color: #0056b3;
+  }
+</style>
+</head>
+<body>
+
+<!-- Animated Header -->
+<div class="main-header">theGlobEdge</div>
+
+<!-- Description Section -->
+<div class="description-section">
+  <strong>theGlobEdge — Bridging Dreams with Destinations</strong><br><br>
+  theGlobEdge is a premier international education consultancy dedicated to guiding aspiring medical students toward top-tier universities across the globe. With a vision to empower Indian students through transparent guidance, trusted partnerships, and personalized mentorship, we simplify the journey to studying MBBS abroad.<br><br>
+  From country selection and university comparison to visa support and post-admission assistance, theGlobEdge provides a one-stop platform for students and parents to make informed, confident decisions. We specialize in connecting students to accredited medical universities in Russia, Philippines, Georgia, Serbia, Nepal, Bangladesh, Kazakhstan, and more — each handpicked for affordability, quality, and global recognition.<br><br>
+  What sets us apart is our honest approach, affordable service charges, and genuine student reviews — because we believe that trust is the foundation of every successful journey.<br><br>
+  <strong>Mission:</strong> To make international medical education accessible, affordable, and hassle-free for every deserving student in India.
+</div>
+
+<!-- Country List -->
+<h1>Medical Universities by Country</h1>
+
+<div class="country-grid" id="countryGrid">
+  <!-- Countries will be dynamically inserted here -->
+</div>
+
+<!-- Footer with Contact Form -->
+<footer>
+  <h3>Contact Us</h3>
+  <form class="contact-form">
+    <input type="text" name="name" placeholder="Your Full Name" required>
+    <input type="email" name="email" placeholder="Email Address" required>
+    <input type="text" name="state" placeholder="State" required>
+    <input type="tel" name="contact" placeholder="Contact Number" required>
+    <select name="field" required>
+      <option value="">Interested Field</option>
+      <option value="MBBS">MBBS</option>
+      <option value="Nursing">Nursing</option>
+      <option value="Pharmacy">Pharmacy</option>
+      <option value="Other">Other</option>
+    </select>
+    <button type="submit">Submit</button>
+  </form>
+  <p>© 2025 All rights reserved.</p>
+</footer>
+
+<script>
+  const countries = [
+    { code: 'Serbia', name: 'Serbia', flag: '🇷🇸' },
+    { code: 'Russia', name: 'Russia', flag: '🇷🇺' },
+    { code: 'China', name: 'China', flag: '🇨🇳' },
+    { code: 'Kazakhstan', name: 'Kazakhstan', flag: '🇰🇿' },
+    { code: 'Philippines', name: 'Philippines', flag: '🇵🇭' },
+    { code: 'Ukraine', name: 'Ukraine', flag: '🇺🇦' },
+    { code: 'Georgia', name: 'Georgia', flag: '🇬🇪' },
+    { code: 'Bangladesh', name: 'Bangladesh', flag: '🇧🇩' },
+    { code: 'Nepal', name: 'Nepal', flag: '🇳🇵' },
+    { code: 'Kyrgyzstan', name: 'Kyrgyzstan', flag: '🇰🇬' },
+    { code: 'Mongolia', name: 'Mongolia', flag: '🇲🇳' },
+    { code: 'Belarus', name: 'Belarus', flag: '🇧🇾' }
+  ];
+
+  const container = document.getElementById('countryGrid');
+
+  countries.forEach(country => {
+    const a = document.createElement('a');
+    a.className = 'country-card';
+    a.href = `country.html?country=${encodeURIComponent(country.code)}`;
+    a.innerHTML = `<div class="flag">${country.flag}</div><div>${country.name}</div>`;
+    container.appendChild(a);
+  });
+</script>
+
+</body>
+</html>

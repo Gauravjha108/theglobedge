@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Universities</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: #fafafa;
+  }
+
+  h1 {
+    text-align: center;
+    letter-spacing: 2px;
+  }
+
+  #backLink {
+    display: inline-block;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: #0077cc;
+  }
+
+  #searchInput {
+    display: block;
+    margin: 0 auto 20px auto;
+    padding: 8px 10px;
+    width: 80%;
+    max-width: 500px;
+    font-size: 16px;
+  }
+
+  .college-list {
+    max-width: 700px;
+    margin: 0 auto;
+    list-style: none;
+    padding: 0;
+  }
+
+  .college-list li {
+    background: white;
+    margin-bottom: 10px;
+    padding: 12px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: background 0.2s ease, transform 0.3s ease;
+  }
+
+  .college-list li:hover {
+    background: #eef7ff;
+    animation: pulse 0.3s ease-in-out;
+    transform: translateY(-2px);
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+  }
+
+  /* Modal styles */
+  .modal-bg {
+    display: none;
+    position: fixed;
+    top:0; left:0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .modal-bg.active {
+    display: flex;
+  }
+
+  .modal {
+    background: white;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 20px;
+    position: relative;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .modal-bg.active .modal {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .modal h3 {
+    margin-top: 0;
+  }
+
+  .close-btn {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    background: #ccc;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  /* Reviews */
+  .reviews {
+    margin-top: 15px;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+  }
+
+  .review-item {
+    background: #f3f6fb;
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+
+  .review-item strong {
+    display: block;
+    margin-bottom: 3px;
+  }
+
+  /* Form */
+  form {
+    margin-top: 15px;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+  }
+
+  form label {
+    display: block;
+    margin: 8px 0 4px;
+  }
+
+  form input,
+  form textarea {
+    width: 100%;
+    padding: 6px 8px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #bbb;
+    box-sizing: border-box;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+
+  form input:focus,
+  form textarea:focus {
+    outline: none;
+    border-color: #0077cc;
+    box-shadow: 0 0 5px rgba(0, 119, 204, 0.5);
+  }
+
+  form textarea {
+    resize: vertical;
+    min-height: 60px;
+  }
+
+  form button {
+    margin-top: 10px;
+    padding: 8px 15px;
+    font-size: 15px;
+    border: none;
+    background: #0077cc;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+
+  form button:hover {
+    background: #005fa3;
+    transform: scale(1.05);
+  }
+
+  footer {
+    background: #f0f0f0;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    font-size: 14px;
+    color: #555;
+    border-top: 1px solid #ddd;
+  }
+</style>
+</head>
+<body>
+
+<a href="index.html" id="backLink">← Back to Countries</a>
+<h1 id="pageTitle">Universities</h1>
+
+<input type="search" id="searchInput" placeholder="Search universities by name or city..." aria-label="Search universities" />
+
+<ul class="college-list" id="collegeList" role="list"></ul>
+
+<!-- Modal -->
+<div class="modal-bg" id="modalBg" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
+  <div class="modal">
+    <button class="close-btn" id="modalCloseBtn" aria-label="Close modal">×</button>
+    <h3 id="modalTitle"></h3>
+    <p id="modalCityCountry"></p>
+
+    <div id="reviewsSection">
+      <h4>Student Reviews</h4>
+      <div id="reviewsContainer"></div>
+    </div>
+
+    <form id="reviewForm" aria-label="Submit student review">
+      <h4>Submit Your Review</h4>
+      <label for="studentName">Name *</label>
+      <input type="text" id="studentName" required />
+
+      <label for="studentEmail">Email *</label>
+      <input type="email" id="studentEmail" required />
+
+      <label for="reviewText">Review *</label>
+      <textarea id="reviewText" required></textarea>
+
+      <button type="submit">Submit Review</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  // University data
+  const universitiesData = {
+    'Serbia': [
+      { name: 'University of Belgrade – Faculty of Medicine', city: 'Belgrade' },
+      { name: 'University of Novi Sad – Faculty of Medicine', city: 'Novi Sad' },
+      { name: 'University of Niš – Faculty of Medicine', city: 'Niš' }
+    ],
+    'India': [
+      { name: 'AIIMS New Delhi', city: 'New Delhi' },
+      { name: 'CMC Vellore', city: 'Vellore' },
+      { name: 'KMC Manipal', city: 'Manipal' }
+    ],
+    'Russia': [
+      { name: 'Moscow State Medical University', city: 'Moscow' },
+      { name: 'Saint Petersburg State Medical University', city: 'Saint Petersburg' }
+    ],
+    'China': [
+      { name: 'Peking University Health Science Center', city: 'Beijing' },
+      { name: 'Fudan University Medical School', city: 'Shanghai' }
+    ],
+    'Kazakhstan': [
+      { name: 'Kazakh National Medical University', city: 'Almaty' }
+    ],
+    'Philippines': [
+      { name: 'University of the Philippines College of Medicine', city: 'Manila' }
+    ],
+    'Ukraine': [
+      { name: 'Bogomolets National Medical University', city: 'Kyiv' }
+    ],
+    'Georgia': [
+      { name: 'Tbilisi State Medical University', city: 'Tbilisi' }
+    ],
+    'Bangladesh': [
+      { name: 'Bangladesh Medical College', city: 'Dhaka' }
+    ],
+    'Nepal': [
+      { name: 'Tribhuvan University Institute of Medicine', city: 'Kathmandu' }
+    ],
+    'Kyrgyzstan': [
+      { name: 'Kyrgyz State Medical Academy', city: 'Bishkek' }
+    ],
+    'Mongolia': [
+      { name: 'Mongolian National University of Medical Sciences', city: 'Ulaanbaatar' }
+    ],
+    'Belarus': [
+      { name: 'Belarusian State Medical University', city: 'Minsk' }
+    ]
+  };
+
+  function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+  }
+
+  const country = getQueryParam('country');
+  const pageTitle = document.getElementById('pageTitle');
+  const collegeList = document.getElementById('collegeList');
+  const searchInput = document.getElementById('searchInput');
+
+  if (!country || !universitiesData[country]) {
+    pageTitle.textContent = 'Country not found or invalid.';
+    searchInput.style.display = 'none';
+  } else {
+    pageTitle.textContent = `Universities in ${country}`;
+  }
+
+  const STORAGE_PREFIX = 'universityReviews_';
+
+  function loadReviews(universityName) {
+    const reviewsJSON = localStorage.getItem(STORAGE_PREFIX + universityName);
+    return reviewsJSON ? JSON.parse(reviewsJSON) : [];
+  }
+
+  function saveReview(universityName, review) {
+    const reviews = loadReviews(universityName);
+    reviews.push(review);
+    localStorage.setItem(STORAGE_PREFIX + universityName, JSON.stringify(reviews));
+  }
+
+  function renderReviews(universityName) {
+    const container = document.getElementById('reviewsContainer');
+    const reviews = loadReviews(universityName);
+    container.innerHTML = '';
+    if (reviews.length === 0) {
+      container.textContent = 'No reviews yet. Be the first to review!';
+      return;
+    }
+    reviews.forEach(r => {
+      const div = document.createElement('div');
+      div.className = 'review-item';
+      div.innerHTML = `<strong>${sanitizeHTML(r.name)}</strong><small>${sanitizeHTML(r.email)}</small><p>${sanitizeHTML(r.text)}</p>`;
+      container.appendChild(div);
+    });
+  }
+
+  function sanitizeHTML(str) {
+    return str.replace(/[&<>"']/g, function(m) {
+      return {'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[m];
+    });
+  }
+
+  function populateUniversities(list) {
+    collegeList.innerHTML = '';
+    list.forEach(uni => {
+      const li = document.createElement('li');
+      li.textContent = `${uni.name} (${uni.city})`;
+      li.setAttribute('tabindex', 0);
+      li.addEventListener('click', () => openModal(uni));
+      li.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openModal(uni);
+        }
+      });
+      collegeList.appendChild(li);
+    });
+  }
+
+  function filterUniversities(query) {
+    if (!country || !universitiesData[country]) return;
+    const filtered = universitiesData[country].filter(uni => {
+      return uni.name.toLowerCase().includes(query) || uni.city.toLowerCase().includes(query);
+    });
+    populateUniversities(filtered);
+  }
+
+  searchInput.addEventListener('input', () => {
+    filterUniversities(searchInput.value.trim().toLowerCase());
+  });
+
+  if (country && universitiesData[country]) {
+    populateUniversities(universitiesData[country]);
+  }
+
+  const modalBg = document.getElementById('modalBg');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalCityCountry = document.getElementById('modalCityCountry');
+  const modalCloseBtn = document.getElementById('modalCloseBtn');
+  const reviewForm = document.getElementById('reviewForm');
+
+  let currentUni = null;
+
+  function openModal(uni) {
+    currentUni = uni;
+    modalTitle.textContent = uni.name;
+    modalCityCountry.textContent = `City: ${uni.city} | Country: ${country}`;
+    renderReviews(uni.name);
+    reviewForm.reset();
+    modalBg.classList.add('active');
+    modalBg.focus();
+  }
+
+  modalCloseBtn.addEventListener('click', () => {
+    modalBg.classList.remove('active');
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && modalBg.classList.contains('active')) {
+      modalBg.classList.remove('active');
+    }
+  });
+
+  reviewForm.addEventListener('submit', e => {
+    e.preventDefault();
+    if (!currentUni) return;
+
+    const name = reviewForm.studentName.value.trim();
+    const email = reviewForm.studentEmail.value.trim();
+    const text = reviewForm.reviewText.value.trim();
+
+    if (!name || !email || !text) {
+      alert('Please fill all required fields.');
+      return;
+    }
+
+    const review = { name, email, text, date: new Date().toISOString() };
+    saveReview(currentUni.name, review);
+    renderReviews(currentUni.name);
+    reviewForm.reset();
+    alert('Thank you for your review!');
+  });
+
+  // Animated Header
+  const header = document.getElementById('pageTitle');
+  const originalText = header.textContent;
+  const spanWrap = text => [...text].map(l => `<span>${l}</span>`).join('');
+
+  header.innerHTML = spanWrap(originalText);
+  const spans = header.querySelectorAll('span');
+  spans.forEach((span, i) => {
+    span.style.display = 'inline-block';
+    span.style.transition = 'transform 0.3s ease, color 0.3s ease';
+    span.addEventListener('mouseover', () => {
+      span.style.transform = 'scale(1.4)';
+      span.style.color = '#0077cc';
+    });
+    span.addEventListener('mouseout', () => {
+      span.style.transform = 'scale(1)';
+      span.style.color = 'inherit';
+    });
+  });
+</script>
+
+</body>
+</html>
